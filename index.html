@@ -727,7 +727,7 @@ ul.plain{padding:0;margin:0}
    cover: path to the card image, e.g. "photos/mercer/cover.jpg"
    frames: one entry per photo. Add "src" when you have the file.
    ============================================================ */
-const SHOOTS = [
+let SHOOTS = [
   { id:"pope-state", kind:"sports", title:"Pope State Championship", blurb:"Pope Baseball's state championship run at Coolray Field. Sideline and dugout coverage all game long.",
     place:"Coolray Field, Lawrenceville", date:"May 2026", cover:"photos/pope-state/DSC05294.jpg",
     frames:[
@@ -936,8 +936,27 @@ document.addEventListener('keydown', e=>{
 });
 
 /* ---------- boot ---------- */
+function activeFilter(){
+  return $('#chips .chip.on')?.dataset.cat || 'all';
+}
+async function loadPortfolioShoots(){
+  try{
+    const res = await fetch('/api/portfolio-shoots', { cache: 'no-store' });
+    if(res.ok){
+      const added = await res.json();
+      if(Array.isArray(added) && added.length){
+        SHOOTS = SHOOTS.concat(added);
+        renderShoots(activeFilter());
+      }
+    }
+  }catch(e){
+    // If this fails (offline admin API, etc.) the site still works fine with
+    // whatever shoots are hardcoded above.
+  }
+}
 renderShoots('all');
 setExif('home');
+loadPortfolioShoots();
 observe();
 if(!calm){
   const sh = $('#shutter');
