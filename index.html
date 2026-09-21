@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RShots — Ryan Trotti, Sports & Portrait Photography</title>
+<meta name="description" content="RShots: affordable, high quality sports, senior and wedding photography in Birmingham, Alabama.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RShots — single file site
+   HOW TO ADD REAL PHOTOS:
+   Every empty photo box below is marked with  <!-- PHOTO SLOT -->
+   Drop an <img src="photos/whatever.jpg" alt="description"> inside
+   the <div class="slot-img"> and it will cover the placeholder.
+   ============================================================ */
+
+:root{
+  --ink:#F7F3EA;         /* page background — warm cream */
+  --deck:#FFFFFF;        /* card surface */
+  --panel:#FBF7EE;       /* hover surface */
+  --line:#E4DDCD;        /* hairlines */
+  --chalk:#13233A;       /* primary text — deep navy ink */
+  --mute:#6B7B92;        /* secondary text */
+  --sodium:#4B9CD3;      /* Carolina blue — sports */
+  --ice:#13233A;         /* navy — seniors */
+  --ivory:#C7B48A;       /* warm tan — weddings */
+  --accent:var(--sodium);
+  --shell:min(1180px, 92vw);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--chalk);
+  font-family:'Sora',system-ui,sans-serif;
+  font-weight:300;
+  line-height:1.65;
+  overflow-x:hidden;
+  padding-bottom:34px;
+}
+body::before{
+  /* soft sky wash */
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(60vw 40vw at 82% -8%, rgba(75,156,211,.14), transparent 65%),
+    radial-gradient(50vw 40vw at 8% 12%, rgba(19,35,58,.06), transparent 62%);
+}
+body::after{
+  /* paper grain */
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.06;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;
+}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+
+/* ---------- viewfinder frame (signature) ---------- */
+.vf{position:fixed;inset:14px;pointer-events:none;z-index:60}
+.vf i{position:absolute;width:26px;height:26px;border:2px solid rgba(19,35,58,.28)}
+.vf i:nth-child(1){top:0;left:0;border-right:0;border-bottom:0}
+.vf i:nth-child(2){top:0;right:0;border-left:0;border-bottom:0}
+.vf i:nth-child(3){bottom:0;left:0;border-right:0;border-top:0}
+.vf i:nth-child(4){bottom:0;right:0;border-left:0;border-top:0}
+.vf .rec{
+  position:absolute;top:-2px;left:50%;transform:translateX(-50%);
+  font:500 10px/1 'IBM Plex Mono',monospace;letter-spacing:.22em;
+  color:var(--accent);display:flex;align-items:center;gap:7px;
+}
+.vf .rec b{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 1.9s infinite}
+@keyframes blink{0%,55%{opacity:1}56%,100%{opacity:.15}}
+
+/* ---------- shutter transition ---------- */
+.shutter{position:fixed;inset:0;z-index:200;pointer-events:none}
+.shutter .iris{
+  position:absolute;inset:-12%;background:var(--chalk);
+  clip-path:polygon(25% 2%,75% 2%,99% 50%,75% 98%,25% 98%,1% 50%);
+  transform:scale(0) rotate(0deg);transition:transform .26s cubic-bezier(.5,0,.6,1);
+}
+.shutter.shut .iris{transform:scale(1.7) rotate(30deg)}
+.shutter .blades{
+  position:absolute;top:50%;left:50%;width:min(60vmin,420px);aspect-ratio:1;
+  translate:-50% -50%;opacity:0;transition:opacity .2s;
+}
+.shutter.shut .blades{opacity:.9}
+
+/* ---------- header ---------- */
+.top{
+  position:sticky;top:0;z-index:70;background:rgba(247,243,234,.86);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.top-in{width:var(--shell);margin:0 auto;display:flex;align-items:center;gap:22px;
+  padding:14px 0;flex-wrap:wrap;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+.brand svg{width:30px;height:30px;color:var(--accent);animation:spin 26s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.brand .wm{font-family:'Big Shoulders Display';font-weight:900;font-size:31px;letter-spacing:.02em;line-height:1}
+.brand .wm span{color:var(--accent)}
+.brand small{display:block;font:500 9px/1 'IBM Plex Mono',monospace;letter-spacing:.3em;color:var(--mute);margin-top:3px}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+.tab{
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mute);padding:9px 13px;border:1px solid transparent;
+  border-radius:2px;transition:.22s;position:relative;
+}
+.tab:hover{color:var(--chalk);border-color:var(--line);background:var(--deck)}
+.tab.on{color:#FFFFFF;background:var(--accent);border-color:var(--accent);font-weight:600}
+.tab:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
+
+/* ---------- layout ---------- */
+main{position:relative;z-index:2}
+.page{display:none;width:var(--shell);margin:0 auto;padding:64px 0 90px}
+.page.on{display:block}
+.eyebrow{
+  font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:10px;margin:0 0 16px
+}
+.eyebrow::after{content:'';height:1px;flex:1;background:linear-gradient(90deg,var(--line),transparent)}
+h1,h2,h3{font-family:'Big Shoulders Display';font-weight:800;line-height:.92;letter-spacing:.01em;margin:0}
+h1{font-size:clamp(56px,10vw,132px);font-weight:900;text-transform:uppercase}
+h2{font-size:clamp(38px,5.4vw,64px);text-transform:uppercase}
+h3{font-size:26px;text-transform:uppercase}
+p{margin:0 0 16px;color:#3A4A64;font-size:15.5px}
+.lead{font-size:18px;color:var(--chalk);max-width:62ch}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
+.hero h1 span{display:block}
+.hero h1 .l2{color:transparent;-webkit-text-stroke:2px var(--chalk)}
+.hero .sub{max-width:46ch;margin-top:20px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:2px;
+  font:600 11.5px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;
+  background:var(--accent);color:#FFFFFF;border:1px solid var(--accent);transition:.22s;text-decoration:none;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 0 -6px rgba(75,156,211,.55)}
+.btn.ghost{background:transparent;color:var(--chalk);border-color:var(--chalk)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);box-shadow:none}
+.btn svg{width:15px;height:15px}
+
+.stats{display:flex;gap:0;margin-top:38px;border-top:1px solid var(--line)}
+.stats div{padding:16px 22px 0 0;margin-right:22px;border-right:1px solid var(--line)}
+.stats div:last-child{border-right:0}
+.stats b{display:block;font-family:'Big Shoulders Display';font-size:38px;font-weight:900;line-height:1}
+.stats small{font:400 10px/1.4 'IBM Plex Mono',monospace;letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
+
+/* ---------- photo slot ---------- */
+.slot{margin:0;position:relative;background:var(--deck);border:1px solid var(--line);
+  aspect-ratio:var(--ar,4/5);overflow:hidden}
+.slot-img{position:absolute;inset:0}
+.slot-img img{width:100%;height:100%;object-fit:cover;position:relative;z-index:2}
+.slot-ph{
+  position:absolute;inset:0;z-index:1;display:grid;place-content:center;gap:9px;justify-items:center;
+  background:
+    linear-gradient(135deg,rgba(19,35,58,.04) 25%,transparent 25%,transparent 50%,rgba(19,35,58,.04) 50%,rgba(19,35,58,.04) 75%,transparent 75%);
+  background-size:14px 14px;color:var(--mute);
+}
+.slot-ph svg{width:34px;height:34px;opacity:.5}
+.slot-ph span{font:400 9.5px/1.5 'IBM Plex Mono',monospace;letter-spacing:.18em;text-transform:uppercase;text-align:center;padding:0 12px}
+/* AF brackets snap in on hover */
+.slot .af{position:absolute;inset:12px;z-index:3;opacity:0;transition:.25s;transform:scale(1.12)}
+.slot .af i{position:absolute;width:16px;height:16px;border:2px solid var(--accent)}
+.slot .af i:nth-child(1){top:0;left:0;border-right:0;border-bottom:0}
+.slot .af i:nth-child(2){top:0;right:0;border-left:0;border-bottom:0}
+.slot .af i:nth-child(3){bottom:0;left:0;border-right:0;border-top:0}
+.slot .af i:nth-child(4){bottom:0;right:0;border-left:0;border-top:0}
+.slot .af em{position:absolute;bottom:-2px;left:0;font:600 9px/1 'IBM Plex Mono',monospace;
+  letter-spacing:.2em;color:var(--accent);font-style:normal}
+.slot:hover .af,.slot:focus-visible .af{opacity:1;transform:scale(1)}
+.frame-no{position:absolute;top:10px;right:12px;z-index:4;font:500 10px/1 'IBM Plex Mono',monospace;
+  letter-spacing:.12em;color:var(--mute)}
+
+.hero-stack{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero-stack .slot:first-child{grid-column:1/-1;--ar:16/10}
+
+/* ---------- categories ---------- */
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:78px}
+@media (max-width:1000px){.cats{grid-template-columns:repeat(2,1fr)}}
+.cat{
+  border:1px solid var(--line);background:var(--deck);padding:26px 22px;border-radius:2px;
+  transition:.28s;position:relative;overflow:hidden;text-align:left;width:100%;
+}
+.cat::after{content:'';position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--c);transition:.35s}
+.cat:hover{transform:translateY(-4px);border-color:var(--c);background:var(--panel)}
+.cat:hover::after{width:100%}
+.cat svg{width:32px;height:32px;color:var(--c);margin-bottom:14px}
+.cat h3{margin-bottom:7px}
+.cat p{font-size:13.5px;margin:0;color:var(--mute)}
+.cat .go{margin-top:14px;font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.2em;color:var(--c);
+  text-transform:uppercase;display:inline-flex;gap:7px;align-items:center}
+
+/* ---------- work / shoots ---------- */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 30px}
+.chip{
+  font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;
+  padding:10px 15px;border:1px solid var(--line);border-radius:2px;color:var(--mute);transition:.2s
+}
+.chip:hover{color:var(--chalk);border-color:var(--mute)}
+.chip.on{background:var(--chalk);color:var(--ink);border-color:var(--chalk);font-weight:600}
+
+.shoots{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.shoot{
+  text-align:left;border:1px solid var(--line);background:var(--deck);border-radius:2px;
+  overflow:hidden;transition:transform .3s,border-color .3s;padding:0;width:100%;
+  animation:rise .45s both;
+}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.shoot:hover{border-color:var(--c);transform:translateY(-4px)}
+.shoot .slot{border:0;border-bottom:1px solid var(--line);--ar:4/3}
+.shoot-meta{padding:16px 18px 18px}
+.shoot-meta .kind{font:500 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--c)}
+.shoot-meta h3{font-size:23px;margin:9px 0 6px}
+.shoot-meta p{font-size:13px;color:var(--mute);margin:0}
+.shoot-meta .row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;
+  padding-top:12px;border-top:1px solid var(--line);
+  font:500 10px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
+.shoot:hover .shoot-meta .row .open{color:var(--c)}
+
+/* contact sheet view */
+.sheet{display:none}
+.sheet.on{display:block;animation:rise .4s both}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
+  flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+.sheet-head h2{margin-bottom:6px}
+.sheet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.sheet-grid .slot{--ar:1/1;animation:rise .4s both}
+.back{display:inline-flex;align-items:center;gap:9px;font:600 11px/1 'IBM Plex Mono',monospace;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:22px;transition:.2s}
+.back:hover{color:var(--accent);gap:14px}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start}
+.about .slot{--ar:3/4}
+.sig{font-family:'Big Shoulders Display';font-size:44px;font-weight:700;color:var(--accent);
+  transform:rotate(-3deg);display:inline-block;margin-top:10px}
+.timeline{margin-top:44px;border-left:1px solid var(--line);padding-left:24px}
+.timeline li{list-style:none;margin-bottom:22px;position:relative}
+.timeline li::before{content:'';position:absolute;left:-29px;top:7px;width:9px;height:9px;
+  border-radius:50%;background:var(--ink);border:2px solid var(--accent)}
+.timeline h3{font-size:20px;margin-bottom:4px}
+.timeline p{margin:0;font-size:14px;color:var(--mute)}
+.timeline .when{font:500 10px/1 'IBM Plex Mono',monospace;letter-spacing:.18em;color:var(--accent);text-transform:uppercase}
+ul.plain{padding:0;margin:0}
+
+/* ---------- rates ---------- */
+.rates{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+.rate{border:1px solid var(--line);background:var(--deck);padding:28px 24px;border-radius:2px;
+  display:flex;flex-direction:column;transition:.3s;position:relative}
+.rate:hover{transform:translateY(-5px);border-color:var(--c)}
+.rate.pick{border-color:var(--accent)}
+.rate .flag{position:absolute;top:-1px;right:18px;background:var(--accent);color:#FFFFFF;
+  font:600 9px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;padding:6px 9px;text-transform:uppercase}
+.rate svg{width:28px;height:28px;color:var(--c);margin-bottom:16px}
+.rate .price{font-family:'Big Shoulders Display';font-size:56px;font-weight:900;line-height:1;margin:12px 0 4px}
+.rate .price small{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;color:var(--mute);
+  letter-spacing:.14em;text-transform:uppercase;display:block;margin-top:8px}
+.rate ul{padding:0;margin:20px 0 24px;list-style:none;flex:1}
+.rate li{font-size:13.5px;color:#3A4A64;padding:8px 0 8px 22px;position:relative;border-bottom:1px dashed var(--line)}
+.rate li::before{content:'';position:absolute;left:0;top:15px;width:9px;height:9px;border:2px solid var(--c);border-radius:50%}
+
+/* ---------- contact ---------- */
+.reach{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:14px;margin-top:34px}
+.card{
+  border:1px solid var(--line);background:var(--deck);padding:24px 22px;border-radius:2px;
+  text-align:left;transition:.28s;width:100%;display:block;text-decoration:none;position:relative;overflow:hidden
+}
+.card:hover{transform:translateY(-5px);border-color:var(--c);background:var(--panel)}
+.card svg.mark{width:30px;height:30px;color:var(--c)}
+.card .who{font:500 10px/1 'IBM Plex Mono',monospace;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--mute);margin:18px 0 8px}
+.card .handle{font-family:'Big Shoulders Display';font-size:27px;font-weight:700;word-break:break-word;line-height:1.05}
+.card .act{margin-top:16px;font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--c);display:flex;align-items:center;gap:8px}
+.card.copied .act::after{content:'copied'}
+
+.email-card{cursor:default}
+.email-card:hover{transform:translateY(-5px);border-color:var(--c);background:var(--panel)}
+.email-row{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 0;border-bottom:1px dashed var(--line)}
+.email-row:last-of-type{border-bottom:0}
+.email-row .handle{font-family:'Big Shoulders Display';font-size:19px;font-weight:700;line-height:1.1;
+  word-break:break-all;flex:1}
+.mini-copy{
+  font:600 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--c);border:1px solid var(--line);padding:8px 10px;border-radius:2px;transition:.2s;flex-shrink:0;
+}
+.mini-copy:hover{border-color:var(--c);background:var(--c);color:#FFFFFF}
+.mini-copy.done{border-color:var(--c);background:var(--c);color:#FFFFFF}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px;counter-reset:s}
+.step{border-top:2px solid var(--line);padding-top:16px;counter-increment:s}
+.step::before{content:counter(s,decimal-leading-zero);font-family:'Big Shoulders Display';
+  font-size:44px;font-weight:900;color:var(--accent);line-height:1;display:block;margin-bottom:6px}
+.step h3{font-size:19px;margin-bottom:6px}
+.step p{font-size:13.5px;color:var(--mute);margin:0}
+
+.note{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--deck);
+  padding:20px 22px;margin-top:44px;border-radius:2px}
+.note p{margin:0;font-size:14px;color:var(--mute)}
+
+/* ---------- exif strip ---------- */
+.exif{
+  position:fixed;bottom:0;left:0;right:0;z-index:65;background:rgba(247,243,234,.94);
+  border-top:1px solid var(--line);backdrop-filter:blur(10px);
+  font:500 10px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;color:var(--mute);
+  text-transform:uppercase;padding:11px 0;
+}
+.exif-in{width:var(--shell);margin:0 auto;display:flex;gap:22px;justify-content:space-between;overflow:hidden;white-space:nowrap}
+.exif b{color:var(--accent);font-weight:600}
+.exif span:nth-child(n+4){display:none}
+
+/* ---------- reveal on scroll ---------- */
+.rev{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+.rev.in{opacity:1;transform:none}
+
+/* ---------- lightbox ---------- */
+.box{position:fixed;inset:0;z-index:150;background:rgba(19,35,58,.86);display:none;
+  place-content:center;padding:6vh 5vw}
+.box.on{display:grid}
+.box .frame{width:min(860px,90vw);border:1px solid var(--line);background:var(--deck);position:relative}
+.box .slot{--ar:3/2;border:0}
+.box .cap{padding:16px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;font:500 10.5px/1.6 'IBM Plex Mono',monospace;letter-spacing:.14em;
+  color:var(--mute);text-transform:uppercase}
+.box .x{position:absolute;top:-42px;right:0;font:600 11px/1 'IBM Plex Mono',monospace;
+  letter-spacing:.2em;color:#FFFFFF}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .hero,.about{grid-template-columns:1fr;gap:32px}
+  .cats,.rates,.steps{grid-template-columns:1fr}
+  .top-in{gap:12px}
+  .stats{flex-wrap:wrap}
+  h1{font-size:clamp(44px,13vw,80px)}
+  .vf{inset:8px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .rev{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- viewfinder overlay -->
+<div class="vf" aria-hidden="true">
+  <i></i><i></i><i></i><i></i>
+  <div class="rec"><b></b> RSHOTS / REC</div>
+</div>
+
+<!-- shutter transition -->
+<div class="shutter" id="shutter" aria-hidden="true"><div class="iris"></div></div>
+
+<!-- ===== SVG icon library ===== -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-aperture" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <circle cx="12" cy="12" r="10"/><path d="M14.3 8h7.4M12.4 2.2 8.7 8.6M3.5 6.4l3.7 6.4M2.3 16h7.4M11.6 21.8l3.7-6.4M20.5 17.6l-3.7-6.4"/>
+  </symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M3 7h3l2-2.5h8L18 7h3v13H3z"/><circle cx="12" cy="13" r="4"/>
+  </symbol>
+  <symbol id="i-ball" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20M4.6 5.2C7 8 8.4 12 8 22M19.4 5.2C17 8 15.6 12 16 22"/>
+  </symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M2 8.5 12 4l10 4.5-10 4.5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5M22 8.5V15"/>
+  </symbol>
+  <symbol id="i-rings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <circle cx="8.5" cy="15" r="6"/><circle cx="15.5" cy="15" r="6"/><path d="M12 2.5 9.5 6h5z"/>
+  </symbol>
+  <symbol id="i-lax" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M4 21 13 12"/><path d="M13.5 3.5c3 0 5.5 2.5 5.5 5.5 0 2.4-2 4.5-4.5 4.5S10 11.4 10 9c0-3 2.5-5.5 3.5-5.5z"/>
+  </symbol>
+  <symbol id="i-whistle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M22 4 13 9"/><circle cx="8" cy="15" r="6"/><path d="M14 13h7v4h-7"/>
+  </symbol>
+  <symbol id="i-flash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M13 2 4 14h7l-1 8 9-12h-7z"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M4 12h15M13 6l6 6-6 6"/>
+  </symbol>
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M20 12H5M11 6l-6 6 6 6"/>
+  </symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-snap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M12 2.6c3 0 5 2.2 5 5.2 0 1.1-.1 2.2-.2 2.9.6.3 1.4.2 2 0 .5-.2.9.4.5.9-.5.7-1.6 1.2-2.2 1.5-.3.9 1.6 3.4 3.6 4 .5.2.4.8-.1 1-.9.4-2 .5-2.5.7-.2.2-.2.9-.5 1.1-.4.2-1.2-.1-2.2-.1-1.4 0-2.2 1.6-3.4 1.6s-2-1.6-3.4-1.6c-1 0-1.8.3-2.2.1-.3-.2-.3-.9-.5-1.1-.5-.2-1.6-.3-2.5-.7-.5-.2-.6-.8-.1-1 2-.6 3.9-3.1 3.6-4-.6-.3-1.7-.8-2.2-1.5-.4-.5 0-1.1.5-.9.6.2 1.4.3 2 0-.1-.7-.2-1.8-.2-2.9 0-3 2-5.2 5-5.2z"/>
+  </symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>
+  </symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5L17 13l4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3.5 5.2 2 2 0 0 1 5.5 3z"/>
+  </symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M12 22s7-6.3 7-11.5A7 7 0 0 0 5 10.5C5 15.7 12 22 12 22z"/><circle cx="12" cy="10.5" r="2.6"/>
+  </symbol>
+  <symbol id="i-people" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <circle cx="8.5" cy="8" r="3.2"/><circle cx="16" cy="9" r="2.6"/><path d="M2.5 20c.5-3.4 3-5.2 6-5.2s5.5 1.8 6 5.2"/><path d="M14.5 20c.4-2.6 2-4.2 4.2-4.2 1.2 0 2.2.4 3 1"/>
+  </symbol>
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#" data-go="home">
+      <svg><use href="#i-aperture"/></svg>
+      <span>
+        <span class="wm">R<span>SHOTS</span></span>
+        <small>BIRMINGHAM · ATLANTA</small>
+      </span>
+    </a>
+    <nav>
+      <button class="tab on" data-go="home">Home</button>
+      <button class="tab" data-go="work">Shoots</button>
+      <button class="tab" data-go="about">About</button>
+      <button class="tab" data-go="rates">Rates</button>
+      <button class="tab" data-go="contact">Contact</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="page on" id="home">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Sports · Seniors · Weddings</p>
+      <h1>
+        <span>Every</span>
+        <span class="l2">Big Play</span>
+        <span>Deserves</span>
+        <span>A Frame</span>
+      </h1>
+      <p class="lead sub">I'm Ryan Trotti, a student photographer based in Birmingham during the school year and Atlanta over the summer. I shoot game nights, senior sessions, and wedding days at prices a family can actually say yes to.</p>
+      <div class="cta-row">
+        <button class="btn" data-go="contact"><svg><use href="#i-camera"/></svg> Book a session</button>
+        <button class="btn ghost" data-go="work"><svg><use href="#i-arrow"/></svg> See the shoots</button>
+      </div>
+      <div class="stats">
+        <div><b>50+</b><small>Games shot</small></div>
+        <div><b>48hr</b><small>Gallery turnaround</small></div>
+        <div><b>$40</b><small>Starting rate</small></div>
+      </div>
+    </div>
+
+    <div class="hero-stack">
+      <!-- PHOTO SLOT -->
+      <figure class="slot" tabindex="0" data-open="Hero frame">
+        <div class="slot-img"><!-- <img src="photos/hero.jpg" alt=""> --></div>
+        <div class="slot-ph"><svg><use href="#i-camera"/></svg><span>Hero shot goes here</span></div>
+        <div class="af"><i></i><i></i><i></i><i></i><em>AF LOCK</em></div>
+        <div class="frame-no">001</div>
+      </figure>
+      <!-- PHOTO SLOT -->
+      <figure class="slot" tabindex="0" data-open="Sideline frame">
+        <div class="slot-img"><!-- <img src="photos/two.jpg" alt=""> --></div>
+        <div class="slot-ph"><svg><use href="#i-ball"/></svg><span>Sideline</span></div>
+        <div class="af"><i></i><i></i><i></i><i></i><em>AF LOCK</em></div>
+        <div class="frame-no">002</div>
+      </figure>
+      <!-- PHOTO SLOT -->
+      <figure class="slot" tabindex="0" data-open="Portrait frame">
+        <div class="slot-img"><!-- <img src="photos/three.jpg" alt=""> --></div>
+        <div class="slot-ph"><svg><use href="#i-cap"/></svg><span>Portrait</span></div>
+        <div class="af"><i></i><i></i><i></i><i></i><em>AF LOCK</em></div>
+        <div class="frame-no">003</div>
+      </figure>
+    </div>
+  </div>
+
+  <div class="cats rev">
+    <button class="cat" style="--c:var(--sodium)" data-go="work" data-filter="sports">
+      <svg><use href="#i-ball"/></svg>
+      <h3>Game Day</h3>
+      <p>Basketball, lacrosse, soccer, football. Full-game coverage, or just your player.</p>
+      <span class="go">View sports work <svg style="width:13px;height:13px"><use href="#i-arrow"/></svg></span>
+    </button>
+    <button class="cat" style="--c:var(--ice)" data-go="work" data-filter="seniors">
+      <svg><use href="#i-cap"/></svg>
+      <h3>Senior &amp; Grad</h3>
+      <p>Cap and gown, campus, jersey, or all three. Outfit changes included.</p>
+      <span class="go">View senior work <svg style="width:13px;height:13px"><use href="#i-arrow"/></svg></span>
+    </button>
+    <button class="cat" style="--c:var(--ivory)" data-go="work" data-filter="weddings">
+      <svg><use href="#i-rings"/></svg>
+      <h3>Weddings</h3>
+      <p>Newest chapter for RShots. Limited dates while I build the portfolio, so rates are low.</p>
+      <span class="go">View wedding work <svg style="width:13px;height:13px"><use href="#i-arrow"/></svg></span>
+    </button>
+    <button class="cat" style="--c:var(--chalk)" data-go="work" data-filter="etc">
+      <svg><use href="#i-people"/></svg>
+      <h3>Etc.</h3>
+      <p>Couples, families, engagements, and anything else worth a frame. Reach out and we'll figure it out.</p>
+      <span class="go">View everything else <svg style="width:13px;height:13px"><use href="#i-arrow"/></svg></span>
+    </button>
+  </div>
+
+  <div class="note rev">
+    <p>Booking for fall sports opens in August. Weekday games fill up fastest, so reach out early.</p>
+  </div>
+</section>
+
+<!-- ============ SHOOTS ============ -->
+<section class="page" id="work">
+  <div id="workIndex">
+    <p class="eyebrow">The Archive</p>
+    <h2>Shoots</h2>
+    <p class="lead">Pick a shoot to open its contact sheet. Every frame below is a placeholder until the real photos are dropped in.</p>
+
+    <div class="chips" id="chips">
+      <button class="chip on" data-cat="all">All</button>
+      <button class="chip" data-cat="sports">Sports</button>
+      <button class="chip" data-cat="seniors">Senior &amp; Grad</button>
+      <button class="chip" data-cat="weddings">Weddings</button>
+      <button class="chip" data-cat="etc">Etc.</button>
+    </div>
+
+    <div class="shoots" id="shoots"></div>
+  </div>
+
+  <div class="sheet" id="sheet">
+    <button class="back" id="backBtn"><svg style="width:14px;height:14px"><use href="#i-back"/></svg> All shoots</button>
+    <div class="sheet-head">
+      <div>
+        <p class="eyebrow" id="sheetKind">Sports</p>
+        <h2 id="sheetTitle">Shoot</h2>
+        <p id="sheetBlurb" style="margin:0;max-width:60ch"></p>
+      </div>
+      <div style="font:500 10.5px/1.8 'IBM Plex Mono',monospace;letter-spacing:.14em;color:var(--mute);text-transform:uppercase" id="sheetMeta"></div>
+    </div>
+    <div class="sheet-grid" id="sheetGrid"></div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="page" id="about">
+  <p class="eyebrow">Who's behind the lens</p>
+  <div class="about">
+    <div>
+      <!-- PHOTO SLOT -->
+      <figure class="slot" tabindex="0" data-open="Ryan Trotti">
+        <div class="slot-img"><!-- <img src="photos/ryan.jpg" alt="Ryan Trotti"> --></div>
+        <div class="slot-ph"><svg><use href="#i-camera"/></svg><span>Photo of Ryan</span></div>
+        <div class="af"><i></i><i></i><i></i><i></i><em>AF LOCK</em></div>
+        <div class="frame-no">SELF</div>
+      </figure>
+      <span class="sig">Ryan Trotti</span>
+    </div>
+    <div>
+      <h2>Hey y'all</h2>
+      <p class="lead" style="margin-top:18px">My name is Ryan Trotti, and I am a second-year sports business major at the University of Samford in Birmingham, Alabama.</p>
+      <p>Ever since I was young, I have been fascinated by sports. Growing up, I played everything from soccer to lacrosse to baseball, and I swam competitively too. In high school, I ended up sticking to basketball and lacrosse as my main two sports.</p>
+      <p>While playing, I always wanted to have cool pictures to show my family and friends, but every photographer was too overpriced. That's why I decided to start my own photography project that I call RShots.</p>
+      <p>I offer affordable pricing to kids and families who want to have high-quality event pictures at a price that doesn't burn a hole in their pocket.</p>
+
+      <ul class="timeline plain">
+        <li>
+          <span class="when">Then</span>
+          <h3>On the field</h3>
+          <p>Soccer, lacrosse, baseball, and swimming growing up, then basketball and lacrosse through high school.</p>
+        </li>
+        <li>
+          <span class="when">Now</span>
+          <h3>Sports business at Samford</h3>
+          <p>Second year, and shooting games around Birmingham most weekends.</p>
+        </li>
+        <li>
+          <span class="when">Next</span>
+          <h3>Seniors and weddings</h3>
+          <p>Same eye for timing, pointed at caps, gowns, and first dances.</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RATES ============ -->
+<section class="page" id="rates">
+  <p class="eyebrow">What it costs</p>
+  <h2>Rates</h2>
+  <p class="lead">No packages you have to decode. One price, edited photos delivered in a shared gallery you can download and print from.</p>
+
+  <div class="rates">
+    <div class="rate" style="--c:var(--sodium)">
+      <svg><use href="#i-ball"/></svg>
+      <h3>Single Game</h3>
+      <div class="price">$75<small>Per athlete, per game</small></div>
+      <ul>
+        <li>Full game coverage</li>
+        <li>25+ edited photos</li>
+        <li>48 hour turnaround</li>
+        <li>Print and social sizes</li>
+      </ul>
+      <button class="btn ghost" data-go="contact">Book game day</button>
+    </div>
+    <div class="rate pick" style="--c:var(--ice)">
+      <span class="flag">Most booked</span>
+      <svg><use href="#i-cap"/></svg>
+      <h3>Senior Session</h3>
+      <div class="price">$150<small>90 minutes, one location</small></div>
+      <ul>
+        <li>Two outfit changes</li>
+        <li>40+ edited photos</li>
+        <li>Cap, gown, or jersey</li>
+        <li>Announcement-ready crops</li>
+      </ul>
+      <button class="btn" data-go="contact">Book a session</button>
+    </div>
+    <div class="rate" style="--c:var(--ivory)">
+      <svg><use href="#i-rings"/></svg>
+      <h3>Wedding Day</h3>
+      <div class="price">$650<small>Six hours of coverage</small></div>
+      <ul>
+        <li>Getting ready through reception</li>
+        <li>250+ edited photos</li>
+        <li>Sneak peek within a week</li>
+        <li>Second shooter available</li>
+      </ul>
+      <button class="btn ghost" data-go="contact">Check a date</button>
+    </div>
+  </div>
+
+  <div class="note">
+    <p>Team and multi-game rates get cheaper the more games you add. Travel outside Jefferson County is a flat $25.</p>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="page" id="contact">
+  <p class="eyebrow">Reach out</p>
+  <h2>Let's shoot</h2>
+  <p class="lead">Text or DM is fastest. Tell me the date, the sport or occasion, and where it is.</p>
+
+  <div class="reach">
+    <button class="card" style="--c:var(--sodium)" data-copy="(470) 580-3442">
+      <svg class="mark"><use href="#i-phone"/></svg>
+      <div class="who">Call or text</div>
+      <div class="handle">(470) 580-3442</div>
+      <div class="act">Tap to copy</div>
+    </button>
+    <div class="card email-card" style="--c:var(--ice)">
+      <svg class="mark"><use href="#i-mail"/></svg>
+      <div class="who">Email</div>
+      <div class="email-row">
+        <span class="handle">ryan.trotti@icloud.com</span>
+        <button class="mini-copy" data-copy="ryan.trotti@icloud.com" aria-label="Copy personal email">Copy</button>
+      </div>
+      <div class="email-row">
+        <span class="handle">rtrotti@samford.edu</span>
+        <button class="mini-copy" data-copy="rtrotti@samford.edu" aria-label="Copy school email">Copy</button>
+      </div>
+      <div class="who" style="margin-top:14px;color:var(--mute)">Personal or school, either works</div>
+    </div>
+    <a class="card" style="--c:var(--ivory)" href="https://instagram.com/_rshots_" target="_blank" rel="noopener">
+      <svg class="mark"><use href="#i-ig"/></svg>
+      <div class="who">Instagram</div>
+      <div class="handle">@_rshots_</div>
+      <div class="act">Open profile <svg style="width:13px;height:13px"><use href="#i-arrow"/></svg></div>
+    </a>
+    <button class="card" style="--c:var(--sodium)" data-copy="ryan-trotti">
+      <svg class="mark"><use href="#i-snap"/></svg>
+      <div class="who">Snapchat</div>
+      <div class="handle">ryan-trotti</div>
+      <div class="act">Tap to copy</div>
+    </button>
+  </div>
+
+  <h3 style="margin-top:64px;font-size:22px">How booking works</h3>
+  <div class="steps">
+    <div class="step">
+      <h3>Send the details</h3>
+      <p>Date, time, location, and what you want covered.</p>
+    </div>
+    <div class="step">
+      <h3>Lock the date</h3>
+      <p>I confirm within a day. No deposit for single games.</p>
+    </div>
+    <div class="step">
+      <h3>Get your gallery</h3>
+      <p>Edited photos land in a private link you can download from.</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><svg style="width:14px;height:14px;vertical-align:-2px;color:var(--accent)"><use href="#i-pin"/></svg> Based in Birmingham, Alabama during the school year and the Atlanta area over the summer. Happy to travel for the right shoot.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- lightbox -->
+<div class="box" id="box">
+  <div class="frame">
+    <button class="x" id="boxX">Close ESC</button>
+    <figure class="slot">
+      <div class="slot-img" id="boxImg"></div>
+      <div class="slot-ph"><svg><use href="#i-aperture"/></svg><span id="boxPh">Photo slot</span></div>
+    </figure>
+    <div class="cap"><span id="boxCap">Frame</span><span id="boxExif">RShots</span></div>
+  </div>
+</div>
+
+<div class="exif" aria-hidden="true">
+  <div class="exif-in">
+    <span>RSHOTS &nbsp;<b id="exSec">HOME</b></span>
+    <span>f/<b id="exF">1.8</b></span>
+    <span>1/<b id="exS">1000</b>s</span>
+    <span>ISO <b id="exI">1600</b></span>
+    <span>BIRMINGHAM · ATLANTA</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   EDIT YOUR SHOOTS HERE
+   kind: "sports" | "seniors" | "weddings"
+   cover: path to the card image, e.g. "photos/mercer/cover.jpg"
+   frames: one entry per photo. Add "src" when you have the file.
+   ============================================================ */
+const SHOOTS = [
+  { id:"pope-state", kind:"sports", title:"Pope State Championship", blurb:"Pope Baseball's state championship run at Coolray Field. Sideline and dugout coverage all game long.",
+    place:"Coolray Field, Lawrenceville", date:"May 2026", cover:"photos/pope-state/DSC05294.jpg",
+    frames:[
+      {cap:"Pregame lineup", src:"photos/pope-state/DSC05294.jpg"},
+      {cap:"Taking the field", src:"photos/pope-state/DSC05336.jpg"},
+      {cap:"At the plate", src:"photos/pope-state/DSC05457.jpg"},
+      {cap:"Behind the plate", src:"photos/pope-state/DSC05649.jpg"},
+      {cap:"Coach's call", src:"photos/pope-state/DSC05807.jpg"},
+      {cap:"Between innings", src:"photos/pope-state/DSC05984.jpg"},
+      {cap:"Holding ground", src:"photos/pope-state/DSC06199.jpg"}
+    ] },
+  { id:"mercer", kind:"sports", title:"Samford vs. Mercer", blurb:"Men's lacrosse, second half under the lights. Mostly 200mm from the endline.",
+    place:"Seibert Stadium", date:"Apr 2026", cover:"",
+    frames:[{cap:"Faceoff win"},{cap:"Sideline huddle"},{cap:"Shot on goal"},{cap:"Goalie save"},{cap:"Bench reaction"},{cap:"Final whistle"}] },
+  { id:"hoops", kind:"sports", title:"Hoover High Hoops", blurb:"Friday night varsity basketball. High ISO, fast glass, a lot of baseline crouching.",
+    place:"Hoover, AL", date:"Feb 2026", cover:"",
+    frames:[{cap:"Tip-off"},{cap:"Fast break"},{cap:"Corner three"},{cap:"Student section"},{cap:"Timeout"},{cap:"Senior night"}] },
+  { id:"club-soccer", kind:"sports", title:"Vestavia Club Soccer", blurb:"Two U14 matches back to back, shot for six different families in one afternoon.",
+    place:"Vestavia Hills", date:"Mar 2026", cover:"",
+    frames:[{cap:"Warmups"},{cap:"Header"},{cap:"Slide tackle"},{cap:"Goal celebration"},{cap:"Team photo"}] },
+  { id:"ella-senior", kind:"seniors", title:"Ella K. — Senior Session", blurb:"Golden hour on campus, then a jersey change at the field she played on for four years.",
+    place:"Samford Campus", date:"May 2026", cover:"",
+    frames:[{cap:"Quad steps"},{cap:"Cap and gown"},{cap:"Jersey portrait"},{cap:"Walking away"},{cap:"Detail: ring"},{cap:"Last light"}] },
+  { id:"grad-group", kind:"seniors", title:"Class of '26 Group Shoot", blurb:"Five friends, one hour, one very patient set of parents holding reflectors.",
+    place:"Railroad Park", date:"May 2026", cover:"",
+    frames:[{cap:"Group walk"},{cap:"Cap toss"},{cap:"Bench portraits"},{cap:"Skyline frame"}] },
+  { id:"hallie-wedding", kind:"weddings", title:"Hallie &amp; Drew", blurb:"First RShots wedding. Small ceremony, big reception, and a sparkler exit that actually worked.",
+    place:"Mountain Brook", date:"Jun 2026", cover:"",
+    frames:[{cap:"Getting ready"},{cap:"First look"},{cap:"Ceremony"},{cap:"Rings"},{cap:"First dance"},{cap:"Sparkler exit"}] },
+  { id:"engagement", kind:"weddings", title:"Maggie &amp; Sam — Engagement", blurb:"Late evening downtown session, mostly available light and one small flash.",
+    place:"Downtown Birmingham", date:"Jun 2026", cover:"",
+    frames:[{cap:"Alley portrait"},{cap:"Ring detail"},{cap:"Neon crosswalk"},{cap:"Rooftop"}] },
+  { id:"weaver-family", kind:"etc", title:"The Weavers — Family Session", blurb:"Three generations, one golden hour, and a very cooperative dog.",
+    place:"Piedmont Park, Atlanta", date:"Jul 2026", cover:"",
+    frames:[{cap:"Full family"},{cap:"Grandparents"},{cap:"Kids running"},{cap:"Candid laugh"},{cap:"Dog portrait"}] },
+  { id:"couple-anniv", kind:"etc", title:"Anna &amp; Jake — Anniversary", blurb:"Five-year anniversary shoot, all natural light, a lot of walking and talking.",
+    place:"Vulcan Trail, Birmingham", date:"May 2026", cover:"",
+    frames:[{cap:"Overlook"},{cap:"Walking away"},{cap:"Close portrait"},{cap:"Laughing"}] }
+];
+
+const KIND = {
+  sports:  {label:"Sports",        c:"var(--sodium)", icon:"#i-ball"},
+  seniors: {label:"Senior & Grad", c:"var(--ice)",    icon:"#i-cap"},
+  weddings:{label:"Weddings",      c:"var(--ivory)",  icon:"#i-rings"},
+  etc:     {label:"Etc.",          c:"var(--chalk)",  icon:"#i-people"}
+};
+
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- slot markup ---------- */
+function slotHTML(o){
+  const k = KIND[o.kind] || KIND.sports;
+  const img = o.src ? `<img src="${o.src}" alt="${o.cap||''}">` : `<!-- add <img src="photos/file.jpg" alt=""> -->`;
+  return `
+  <figure class="slot" tabindex="0" data-open="${o.cap||'Frame'}" data-sub="${o.sub||''}" style="--ar:${o.ar||'4/5'}">
+    <div class="slot-img">${img}</div>
+    <div class="slot-ph"><svg><use href="${k.icon}"/></svg><span>${o.cap||'Photo slot'}</span></div>
+    <div class="af"><i></i><i></i><i></i><i></i><em>AF LOCK</em></div>
+    <div class="frame-no">${o.no||''}</div>
+  </figure>`;
+}
+
+/* ---------- shoot cards ---------- */
+function renderShoots(filter){
+  const wrap = $('#shoots');
+  const list = SHOOTS.filter(s => filter==='all' || s.kind===filter);
+  wrap.innerHTML = list.map((s,i)=>{
+    const k = KIND[s.kind];
+    return `
+    <button class="shoot" style="--c:${k.c};animation-delay:${calm?0:i*55}ms" data-shoot="${s.id}">
+      ${slotHTML({kind:s.kind, cap:s.title, src:s.cover, ar:'4/3', no:String(i+1).padStart(3,'0')})}
+      <div class="shoot-meta">
+        <div class="kind">${k.label}</div>
+        <h3>${s.title}</h3>
+        <p>${s.place} · ${s.date}</p>
+        <div class="row"><span>${s.frames.length} frames</span><span class="open">Open sheet &rarr;</span></div>
+      </div>
+    </button>`;
+  }).join('');
+}
+
+/* ---------- contact sheet ---------- */
+function openSheet(id){
+  const s = SHOOTS.find(x=>x.id===id); if(!s) return;
+  const k = KIND[s.kind];
+  $('#sheetKind').textContent = k.label;
+  $('#sheetKind').style.color = k.c;
+  $('#sheetTitle').innerHTML = s.title;
+  $('#sheetBlurb').textContent = s.blurb;
+  $('#sheetMeta').innerHTML = `${s.place}<br>${s.date}<br>${s.frames.length} frames`;
+  $('#sheetGrid').innerHTML = s.frames.map((f,i)=>
+    slotHTML({kind:s.kind, cap:f.cap, src:f.src, ar:'1/1', no:String(i+1).padStart(3,'0'), sub:s.title})
+  ).join('');
+  $$('#sheetGrid .slot').forEach((el,i)=>{ if(!calm) el.style.animationDelay = (i*45)+'ms'; });
+  $('#workIndex').style.display='none';
+  $('#sheet').classList.add('on');
+  window.scrollTo({top:0, behavior: calm?'auto':'smooth'});
+}
+function closeSheet(){
+  $('#sheet').classList.remove('on');
+  $('#workIndex').style.display='';
+}
+
+/* ---------- tabs + shutter ---------- */
+const EXIF = {
+  home:    {f:'1.8', s:'1000', i:'1600'},
+  work:    {f:'2.8', s:'800',  i:'3200'},
+  about:   {f:'1.4', s:'250',  i:'400'},
+  rates:   {f:'5.6', s:'125',  i:'200'},
+  contact: {f:'2.0', s:'60',   i:'800'}
+};
+function setExif(id){
+  const e = EXIF[id] || EXIF.home;
+  $('#exSec').textContent = id.toUpperCase();
+  $('#exF').textContent = e.f; $('#exS').textContent = e.s; $('#exI').textContent = e.i;
+}
+function go(id, filter){
+  if(!document.getElementById(id)) return;
+  const swap = ()=>{
+    $$('.page').forEach(p=>p.classList.toggle('on', p.id===id));
+    $$('.tab').forEach(t=>t.classList.toggle('on', t.dataset.go===id));
+    if(id==='work'){
+      closeSheet();
+      if(filter){
+        $$('#chips .chip').forEach(c=>c.classList.toggle('on', c.dataset.cat===filter));
+        renderShoots(filter);
+      }
+    }
+    setExif(id);
+    window.scrollTo({top:0, behavior:'auto'});
+    observe();
+  };
+  if(calm){ swap(); return; }
+  const sh = $('#shutter');
+  sh.classList.add('shut');
+  setTimeout(()=>{ swap(); sh.classList.remove('shut'); }, 260);
+}
+
+/* ---------- lightbox ---------- */
+function openBox(el){
+  const img = el.querySelector('.slot-img img');
+  $('#boxImg').innerHTML = img ? `<img src="${img.getAttribute('src')}" alt="">` : '';
+  $('#boxPh').textContent = el.dataset.open || 'Photo slot';
+  $('#boxCap').textContent = el.dataset.open || 'Frame';
+  $('#boxExif').textContent = el.dataset.sub || 'RShots';
+  $('#box').classList.add('on');
+}
+function closeBox(){ $('#box').classList.remove('on'); }
+
+/* ---------- reveal ---------- */
+let io;
+function observe(){
+  if(calm) return;
+  io = io || new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+  }),{threshold:.12});
+  $$('.rev:not(.in)').forEach(el=>io.observe(el));
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e=>{
+  const nav = e.target.closest('[data-go]');
+  if(nav){ e.preventDefault(); go(nav.dataset.go, nav.dataset.filter); return; }
+
+  const chip = e.target.closest('.chip');
+  if(chip){
+    $$('#chips .chip').forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');
+    renderShoots(chip.dataset.cat);
+    return;
+  }
+
+  const card = e.target.closest('.shoot');
+  if(card){ openSheet(card.dataset.shoot); return; }
+
+  if(e.target.closest('#backBtn')){ closeSheet(); return; }
+
+  const slot = e.target.closest('.slot');
+  if(slot && !e.target.closest('#box') && !e.target.closest('.shoot')){ openBox(slot); return; }
+
+  if(e.target.closest('#boxX') || e.target.id==='box'){ closeBox(); return; }
+
+  const copy = e.target.closest('[data-copy]');
+  if(copy){
+    navigator.clipboard?.writeText(copy.dataset.copy);
+    if(copy.classList.contains('mini-copy')){
+      const old = copy.textContent;
+      copy.textContent = 'Copied';
+      copy.classList.add('done');
+      setTimeout(()=>{ copy.textContent = old; copy.classList.remove('done'); }, 1600);
+    } else {
+      const act = copy.querySelector('.act');
+      if(act){
+        const old = act.textContent;
+        act.textContent = 'Copied';
+        setTimeout(()=>{ act.textContent = old; }, 1600);
+      }
+    }
+  }
+});
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ closeBox(); }
+  if(e.key==='Enter' && document.activeElement?.classList.contains('slot')){
+    openBox(document.activeElement);
+  }
+});
+
+/* ---------- boot ---------- */
+renderShoots('all');
+setExif('home');
+observe();
+if(!calm){
+  const sh = $('#shutter');
+  sh.classList.add('shut');
+  requestAnimationFrame(()=>setTimeout(()=>sh.classList.remove('shut'), 120));
+}
+</script>
+</body>
+</html>
