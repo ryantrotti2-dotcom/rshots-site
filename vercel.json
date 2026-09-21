@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/gallery/:path*", "destination": "https://rshots-gallery.vercel.app/gallery/:path*" },
+    { "source": "/admin/:path*", "destination": "https://rshots-gallery.vercel.app/admin/:path*" },
+    { "source": "/api/:path*", "destination": "https://rshots-gallery.vercel.app/api/:path*" }
+  ]
+}
