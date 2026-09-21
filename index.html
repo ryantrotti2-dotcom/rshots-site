@@ -738,34 +738,31 @@ const SHOOTS = [
       {cap:"Coach's call", src:"photos/pope-state/DSC05807.jpg"},
       {cap:"Between innings", src:"photos/pope-state/DSC05984.jpg"},
       {cap:"Holding ground", src:"photos/pope-state/DSC06199.jpg"}
-    ] },
-  { id:"mercer", kind:"sports", title:"Samford vs. Mercer", blurb:"Men's lacrosse, second half under the lights. Mostly 200mm from the endline.",
-    place:"Seibert Stadium", date:"Apr 2026", cover:"",
-    frames:[{cap:"Faceoff win"},{cap:"Sideline huddle"},{cap:"Shot on goal"},{cap:"Goalie save"},{cap:"Bench reaction"},{cap:"Final whistle"}] },
-  { id:"hoops", kind:"sports", title:"Hoover High Hoops", blurb:"Friday night varsity basketball. High ISO, fast glass, a lot of baseline crouching.",
-    place:"Hoover, AL", date:"Feb 2026", cover:"",
-    frames:[{cap:"Tip-off"},{cap:"Fast break"},{cap:"Corner three"},{cap:"Student section"},{cap:"Timeout"},{cap:"Senior night"}] },
-  { id:"club-soccer", kind:"sports", title:"Vestavia Club Soccer", blurb:"Two U14 matches back to back, shot for six different families in one afternoon.",
-    place:"Vestavia Hills", date:"Mar 2026", cover:"",
-    frames:[{cap:"Warmups"},{cap:"Header"},{cap:"Slide tackle"},{cap:"Goal celebration"},{cap:"Team photo"}] },
-  { id:"ella-senior", kind:"seniors", title:"Ella K. — Senior Session", blurb:"Golden hour on campus, then a jersey change at the field she played on for four years.",
-    place:"Samford Campus", date:"May 2026", cover:"",
-    frames:[{cap:"Quad steps"},{cap:"Cap and gown"},{cap:"Jersey portrait"},{cap:"Walking away"},{cap:"Detail: ring"},{cap:"Last light"}] },
-  { id:"grad-group", kind:"seniors", title:"Class of '26 Group Shoot", blurb:"Five friends, one hour, one very patient set of parents holding reflectors.",
-    place:"Railroad Park", date:"May 2026", cover:"",
-    frames:[{cap:"Group walk"},{cap:"Cap toss"},{cap:"Bench portraits"},{cap:"Skyline frame"}] },
-  { id:"hallie-wedding", kind:"weddings", title:"Hallie &amp; Drew", blurb:"First RShots wedding. Small ceremony, big reception, and a sparkler exit that actually worked.",
-    place:"Mountain Brook", date:"Jun 2026", cover:"",
-    frames:[{cap:"Getting ready"},{cap:"First look"},{cap:"Ceremony"},{cap:"Rings"},{cap:"First dance"},{cap:"Sparkler exit"}] },
-  { id:"engagement", kind:"weddings", title:"Maggie &amp; Sam — Engagement", blurb:"Late evening downtown session, mostly available light and one small flash.",
-    place:"Downtown Birmingham", date:"Jun 2026", cover:"",
-    frames:[{cap:"Alley portrait"},{cap:"Ring detail"},{cap:"Neon crosswalk"},{cap:"Rooftop"}] },
-  { id:"weaver-family", kind:"etc", title:"The Weavers — Family Session", blurb:"Three generations, one golden hour, and a very cooperative dog.",
-    place:"Piedmont Park, Atlanta", date:"Jul 2026", cover:"",
-    frames:[{cap:"Full family"},{cap:"Grandparents"},{cap:"Kids running"},{cap:"Candid laugh"},{cap:"Dog portrait"}] },
-  { id:"couple-anniv", kind:"etc", title:"Anna &amp; Jake — Anniversary", blurb:"Five-year anniversary shoot, all natural light, a lot of walking and talking.",
-    place:"Vulcan Trail, Birmingham", date:"May 2026", cover:"",
-    frames:[{cap:"Overlook"},{cap:"Walking away"},{cap:"Close portrait"},{cap:"Laughing"}] }
+    ] }
+
+  /* ------------------------------------------------------------
+     TO ADD A NEW SHOOT: copy the block below, paste it right
+     above this comment (don't forget a comma after the entry
+     above it), then fill in your own info. Delete this comment
+     block once you've made your first real edit if you want —
+     it's just here for reference and doesn't show up on the site.
+
+  , { id:"unique-short-name", kind:"sports", title:"Full Shoot Title", blurb:"One or two sentences about the shoot.",
+      place:"Where it was", date:"Mon YYYY", cover:"photos/unique-short-name/COVER_FILENAME.jpg",
+      frames:[
+        {cap:"Short caption", src:"photos/unique-short-name/FILENAME.jpg"},
+        {cap:"Another caption", src:"photos/unique-short-name/FILENAME2.jpg"}
+      ] }
+
+     Notes:
+     - "id" just needs to be unique and url-safe (lowercase, hyphens, no spaces).
+     - "kind" must be exactly one of: sports, seniors, weddings, etc
+     - "cover" is the photo shown on the gallery card before someone clicks in.
+     - Every photo file goes in a new folder under photos/, named to match
+       your "id" (e.g. photos/unique-short-name/), and each "src" points to
+       one of those files.
+     - Add as many entries to "frames" as you want, one per photo.
+     ------------------------------------------------------------ */
 ];
 
 const KIND = {
