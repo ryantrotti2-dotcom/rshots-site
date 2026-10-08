@@ -114,9 +114,8 @@ p{margin:0 0 16px;color:#4A5A70;font-size:15.5px}
 .btn.ghost:hover{border-color:var(--ink);background:transparent;color:var(--ink)}
 .btn svg{width:14px;height:14px}
 
-.hero-shot{width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw}
-.hero-shot .slot{--ar:21/9;border-radius:0}
-@media (max-width:760px){.hero-shot .slot{--ar:4/5}}
+.hero-shot{width:min(560px,86vw);margin:0 auto}
+.hero-shot .slot{--ar:4/5}
 
 .stats{display:flex;justify-content:center;gap:0;margin-top:56px;flex-wrap:wrap}
 .stats div{padding:0 32px;text-align:center;border-left:1px solid var(--line)}
@@ -370,7 +369,7 @@ footer{border-top:1px solid var(--line);padding:40px 0;margin-top:0}
   <div class="hero-shot">
     <!-- PHOTO SLOT -->
     <figure class="slot" tabindex="0" data-open="Hero frame">
-      <div class="slot-img"><!-- <img src="photos/hero.jpg" alt=""> --></div>
+      <div class="slot-img"><img src="photos/hero.jpg" alt="Warriors football touchdown celebration"></div>
       <div class="slot-ph"><svg><use href="#i-camera"/></svg><span>Hero shot goes here</span></div>
       <div class="frame-no">001</div>
     </figure>
