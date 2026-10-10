@@ -638,17 +638,6 @@ footer{border-top:1px solid var(--line);padding:40px 0;margin-top:0}
    frames: one entry per photo. Add "src" when you have the file.
    ============================================================ */
 let SHOOTS = [
-  { id:"pope-state", kind:"sports", title:"Pope State Championship", blurb:"Pope Baseball's state championship run at Coolray Field. Sideline and dugout coverage all game long.",
-    place:"Coolray Field, Lawrenceville", date:"May 2026", cover:"photos/pope-state/DSC05294.jpg",
-    frames:[
-      {cap:"Pregame lineup", src:"photos/pope-state/DSC05294.jpg"},
-      {cap:"Taking the field", src:"photos/pope-state/DSC05336.jpg"},
-      {cap:"At the plate", src:"photos/pope-state/DSC05457.jpg"},
-      {cap:"Behind the plate", src:"photos/pope-state/DSC05649.jpg"},
-      {cap:"Coach's call", src:"photos/pope-state/DSC05807.jpg"},
-      {cap:"Between innings", src:"photos/pope-state/DSC05984.jpg"},
-      {cap:"Holding ground", src:"photos/pope-state/DSC06199.jpg"}
-    ] }
 
   /* ------------------------------------------------------------
      TO ADD A NEW SHOOT: copy the block below, paste it right
@@ -702,6 +691,10 @@ function slotHTML(o){
 function renderShoots(filter){
   const wrap = $('#shoots');
   const list = SHOOTS.filter(s => filter==='all' || s.kind===filter);
+  if(!list.length){
+    wrap.innerHTML = '<p style="color:var(--mute);font-size:14px">New shoots are on the way, check back soon.</p>';
+    return;
+  }
   wrap.innerHTML = list.map((s,i)=>{
     const k = KIND[s.kind];
     return `
